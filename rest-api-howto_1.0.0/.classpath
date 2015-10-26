@@ -11,6 +11,5 @@
 	<classpathentry kind="src" path="mappings"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="MULE_RUNTIME/org.mule.tooling.apigateway.2.1.0"/>
-	<classpathentry kind="con" path="MUNIT_RUNTIME"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
