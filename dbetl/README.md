@@ -46,7 +46,3 @@ Exchange](http://www.mulesoft.org/documentation/display/current/Anypoint
 
 7. Check whether the table "STATUS_REPORT" got populated with data.
 
-###Go Further
-###
-* View this
-

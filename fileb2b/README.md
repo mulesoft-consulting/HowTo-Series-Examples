@@ -48,10 +48,5 @@ Details on how these files can be created can be found [here]
 
 7. Transfer the sample.csv file inside the src/main/resources/archive folder into src/main/resources/input
 
-8. The file will be picked up and transferred to the configured SFTP endpoint. 
-
-
-###Go Further
-###
-* View this
+8. The file will be picked up and transferred to the configured SFTP endpoint.
 
