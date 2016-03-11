@@ -38,5 +38,5 @@ Follow the procedure below to create, then run the REST XML payload HowTo exampl
 ###Go Further
 To learn how to build this example out check out this [blog]() where we give step by step instrcutions.
 ###
-* View this
+
 
