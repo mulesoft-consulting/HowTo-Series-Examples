@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://jsonschema.net",
+  "type": "object",
+  "properties": {
+    "OrderID": {
+      "id": "http://jsonschema.net/OrderID",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000,
+      "minLength": 2,
+      "maxLength": 5
+    },
+    "SKUs": {
+      "id": "http://jsonschema.net/SKUs",
+      "type": "string"
+    },
+    "RetailerName": {
+      "id": "http://jsonschema.net/RetailerName",
+      "type": "string"
+    },
+    "OrderDate": {
+      "id": "http://jsonschema.net/OrderDate",
+      "type": "string"
+    }
+  },
+  "required": [
+    "OrderID",
+    "SKUs",
+    "RetailerName",
+    "OrderDate"
+  ]
+}
