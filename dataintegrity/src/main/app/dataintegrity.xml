@@ -16,12 +16,12 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
         <batch:input>
             <poll doc:name="Capture Changed Records">
             <fixed-frequency-scheduler frequency="10000"/>
-            <watermark variable="watermark" default-expression="#[server .dateTime.plusDays(-1).toString()]" selector="MAX" selector-expression="#[payload.OrderDate]"/>
+            <watermark variable="watermark" default-expression="#[server.dateTime.plusDays(-1).toString()]" selector="MAX" selector-expression="#[payload.OrderDate]"/>
                 <db:select config-ref="MySQL_Configuration" doc:name="Poll for new order updates">
-                    <db:parameterized-query><![CDATA[select * from ORDERS where OrderDate > #[watermark]]]></db:parameterized-query>
+                    <db:parameterized-query><![CDATA[select OrderID,RetailerName,SKUs,OrderDate from ORDERS where OrderDate > #[watermark]]]></db:parameterized-query>
                 </db:select>
         </poll>
-            <dw:transform-message doc:name="Deduplicate Records using Order ID">
+            <dw:transform-message doc:name="Deduplicate Records using Order ID" metadata:id="413ee2e4-5935-4376-8f06-e01fdf07f286">
                 <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
 ---
@@ -30,7 +30,7 @@ payload distinctBy $.OrderID]]></dw:set-payload>
         </batch:input>
         <batch:process-records>
             <batch:step name="DataIntegrityCheck">
-                <dw:transform-message doc:name="Transform to JSON">
+                <dw:transform-message doc:name="Transform to JSON" metadata:id="b1895e87-94ff-4306-aab5-d24c9ee7a9ff">
                     <dw:set-payload><![CDATA[%dw 1.0
 %output application/json
 ---
@@ -40,7 +40,7 @@ payload]]></dw:set-payload>
                 <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
             </batch:step>
           <batch:step name="Transform_QuerySKU">
-                <dw:transform-message doc:name="Store order and sku list">
+                <dw:transform-message doc:name="Store order and sku list" metadata:id="d0d986fd-bd23-4841-bc09-6240ba0e8e11">
                     <dw:set-variable variableName="order"><![CDATA[%dw 1.0
 %output application/java
 ---
@@ -79,7 +79,7 @@ flowVars.skuproduct[0].Product when flowVars.index==1 otherwise flowVars.product
                 </batch:step>
             <batch:step name="FailedRecords" accept-policy="ONLY_FAILURES">
                 <byte-array-to-object-transformer mimeType="application/json" doc:name="Byte Array to Object"/>
-                <dw:transform-message doc:name="Extract Payload">
+                <dw:transform-message doc:name="Convert JSON to Object" metadata:id="7187f959-b5e2-4be3-9b80-78c0e2fd63f4">
                     <dw:input-payload doc:sample="json.json"/>
                     <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
@@ -94,7 +94,7 @@ payload]]></dw:set-payload>
             
         </batch:process-records>
         <batch:on-complete>
-            <logger level="INFO" doc:name="Logger"/>
+            <logger level="INFO" doc:name="Logger" message="#[payload]"/>
         </batch:on-complete>
     </batch:job>
 </mule>

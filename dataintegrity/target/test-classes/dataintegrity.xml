@@ -79,7 +79,7 @@ flowVars.skuproduct[0].Product when flowVars.index==1 otherwise flowVars.product
                 </batch:step>
             <batch:step name="FailedRecords" accept-policy="ONLY_FAILURES">
                 <byte-array-to-object-transformer mimeType="application/json" doc:name="Byte Array to Object"/>
-                <dw:transform-message doc:name="Convert JSON to Object" metadata:id="7187f959-b5e2-4be3-9b80-78c0e2fd63f4">
+                <dw:transform-message doc:name="Extract Payload" metadata:id="7187f959-b5e2-4be3-9b80-78c0e2fd63f4">
                     <dw:input-payload doc:sample="json.json"/>
                     <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
