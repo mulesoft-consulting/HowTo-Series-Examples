@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ns0:getCustomerResponse xmlns:ns0="http://www.mule.com/schemas/MuleSchema/Schema.xsd2">
+  <ns0:customer>
+    <ns0:id>????</ns0:id>
+    <ns0:fname>????</ns0:fname>
+    <ns0:lname>????</ns0:lname>
+    <ns0:email>????</ns0:email>
+    <ns0:ph_number>????</ns0:ph_number>
+    <ns0:credit_score>????</ns0:credit_score>
+  </ns0:customer>
+</ns0:getCustomerResponse>

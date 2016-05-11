@@ -1,0 +1,62 @@
+#%RAML 0.8
+title: customer_experience_api
+version: 1.0
+baseUri: http://server/mythical/api/{version}
+/customer:
+  displayName: Mythical Customer Mortgage
+  get:
+    description: Query customer detail
+    queryParameters:
+      customerId:
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "Customer" :  {
+                  "name" : "Neerav Agrawal",
+                  "email" : "neerav@mythical.com",
+                  "loanType" : "Auto",
+                  "loanAmount": "20000"
+                  }
+              }
+            schema: |
+              {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "id": "http://jsonschema.net",
+                "type": "object",
+                "properties": {
+                  "Customer": {
+                    "id": "http://jsonschema.net/Customer",
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "id": "http://jsonschema.net/Customer/name",
+                        "type": "string"
+                      },
+                      "email": {
+                        "id": "http://jsonschema.net/Customer/email",
+                        "type": "string"
+                      },
+                      "loanType": {
+                        "id": "http://jsonschema.net/Customer/loanType",
+                        "type": "string"
+                      },
+                      "loanAmount": {
+                        "id": "http://jsonschema.net/Customer/loanAmount",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "email",
+                      "loanType",
+                      "loanAmount"
+                    ]
+                  }
+                },
+                "required": [
+                  "Customer"
+                ]
+              }

@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ns0:getLoanResponse xmlns:ns0="http://www.mulesoft.com/schemas/Mule/Schema.xsd">
+  <ns0:loanList>
+    <ns0:loan/>
+  </ns0:loanList>
+</ns0:getLoanResponse>

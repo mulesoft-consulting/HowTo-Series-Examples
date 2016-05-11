@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <http:listener-config name="api-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <apikit:config name="api-config" raml="api.raml" consoleEnabled="true" consolePath="console" doc:name="Router"/>
+    <ws:consumer-config name="Web_Service_Consumer1" wsdlLocation="loan_system_api_wsdl.wsdl" service="loan_system_api_wsdl" port="loan_system_api_wsdlSOAP" serviceAddress="${account.webservice.wsdl.url}" doc:name="Web Service Consumer" connectorConfig="HTTP_Request_Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration" doc:name="HTTP Request Configuration"/>
+    <http:request-config name="HTTP_Request_CustomerAPI" host="${customer.api.host}"  basePath="${customer.api.basepath}" doc:name="HTTP Request Configuration" port="${customer.api.port}"/>
+    <flow name="api-main">
+        <http:listener config-ref="api-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
+        <apikit:router config-ref="api-config" doc:name="APIkit Router"/>
+        <exception-strategy ref="api-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
+    </flow>
+    <flow name="get:/customer:api-config">
+        <scatter-gather doc:name="Scatter-Gather">
+            <processor-chain>
+                <dw:transform-message doc:name="Map Request Customer Webservice" metadata:id="d159fda1-924f-4698-974f-77751a49a020">
+                    <dw:set-payload><![CDATA[%dw 1.0
+%output application/xml
+%namespace ns0 http://www.example.org/customer_inquiry_request_schema
+---
+{
+	ns0#customerInquiryRequest: {
+		ns0#customer: {
+			ns0#customerId: inboundProperties."http.query.params".customerId
+		}
+	}
+}]]></dw:set-payload>
+                </dw:transform-message>
+                <http:request config-ref="HTTP_Request_CustomerAPI" path="customer" method="POST" doc:name="Call Customer REST API"/>
+            </processor-chain>
+            <processor-chain>
+                <dw:transform-message doc:name="Map Request Account Webservice">
+                    <dw:set-payload><![CDATA[%dw 1.0
+%output application/xml
+%namespace ns0 http://www.mulesoft.com/schemas/Mule/Schema.xsd
+---
+{
+	ns0#getLoanRequest: {
+		ns0#customerId: inboundProperties."http.query.params".customerId
+	}
+}]]></dw:set-payload>
+                </dw:transform-message>
+                <ws:consumer config-ref="Web_Service_Consumer1" operation="getLoan" doc:name="Call Account Webservice"/>
+            </processor-chain>
+        </scatter-gather>
+        <dw:transform-message metadata:id="8607db31-adb0-44ad-a814-747de4c4c009" doc:name="MapToFinal Response">
+            <dw:input-payload doc:sample="getLoanResponse.xml"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+%namespace ns0 http://www.mule.com/schemas/MuleSchema/Schema.xsd2
+%namespace ns01 http://www.mulesoft.com/schemas/Mule/Schema.xsd
+%namespace ns02 http://www.example.org/customer_inquiry_response_schema
+---
+{
+	Customer: {
+		email: payload[0].ns02#customerInquiryResponse.ns02#customer.ns02#email,
+		loanAmount: payload[1].ns01#getLoanResponse.ns01#loanList.ns01#loan.ns01#loanAmount,
+		loanType: payload[1].ns01#getLoanResponse.ns01#loanList.ns01#loan.ns01#loanType,
+		name: payload[0].ns02#customerInquiryResponse.ns02#customer.ns02#firstName
+++ " " ++ payload[0].ns02#customerInquiryResponse.ns02#customer.ns02#lastName
+	}
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <apikit:mapping-exception-strategy name="api-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>
