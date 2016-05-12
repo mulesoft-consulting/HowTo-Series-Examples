@@ -31,7 +31,7 @@ Once all the responses are collected, we finally map it to the output.
 
 1. In this example we invoke two APIs, [Customer REST API](https://www.mulesoft.com/exchange/#!/RESTXML) and [Account SOAP Webservice](https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service). 
 We have covered in out previous blog posts  on how to create these services. 
-Check out the links, [Customer REST API]() and [Account SOAP Webservice]()
+Check out the links, [Customer REST API](http://blogs.mulesoft.com/dev/howto/build-rest-api-with-xml-payload/) and [Account SOAP Webservice](http://blogs.mulesoft.com/dev/howto/wrap-soap-web-service-around-a-database/)
 
 2. In order to run this example you can download the mule project from [Exchange](https://www.mulesoft.com/exchange) and deploy it to [Mule iPass](https://www.mulesoft.com/platform/saas/cloudhub-ipaas-cloud-based-integration). 
 
