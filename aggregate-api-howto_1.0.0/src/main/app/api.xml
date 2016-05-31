@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/cu
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
     <http:listener-config name="api-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
     <apikit:config name="api-config" raml="api.raml" consoleEnabled="true" consolePath="console" doc:name="Router"/>
-    <ws:consumer-config name="Web_Service_Consumer1" wsdlLocation="loan_system_api_wsdl.wsdl" service="loan_system_api_wsdl" port="loan_system_api_wsdlSOAP" serviceAddress="${account.webservice.wsdl.url}" doc:name="Web Service Consumer" connectorConfig="HTTP_Request_Configuration"/>
+    <ws:consumer-config name="Web_Service_Consumer" wsdlLocation="loan_system_api_wsdl.wsdl" service="loan_system_api_wsdl" port="loan_system_api_wsdlSOAP" serviceAddress="${account.webservice.wsdl.url}" doc:name="Web Service Consumer" connectorConfig="HTTP_Request_Configuration"/>
     <http:request-config name="HTTP_Request_Configuration" doc:name="HTTP Request Configuration"/>
     <http:request-config name="HTTP_Request_CustomerAPI" host="${customer.api.host}"  basePath="${customer.api.basepath}" doc:name="HTTP Request Configuration" port="${customer.api.port}"/>
     <flow name="api-main">
@@ -45,7 +45,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 	}
 }]]></dw:set-payload>
                 </dw:transform-message>
-                <ws:consumer config-ref="Web_Service_Consumer1" operation="getLoan" doc:name="Call Account Webservice"/>
+                <ws:consumer config-ref="Web_Service_Consumer" operation="getLoan" doc:name="Call Account Webservice"/>
             </processor-chain>
         </scatter-gather>
         <dw:transform-message metadata:id="8607db31-adb0-44ad-a814-747de4c4c009" doc:name="MapToFinal Response">

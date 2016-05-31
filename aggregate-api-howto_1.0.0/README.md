@@ -1,7 +1,7 @@
 #Create API Aggregation
 #
 This example illustrates how to aggregate responses from multiple APIs into a single response.
-It is complementary to a developer blog series that gives step by step instructions to build out this example.
+It is complementary to the [developer blog series] (http://tinyurl.com/zmr9h2u) that gives step by step instructions to build out this example.
 
 
 
