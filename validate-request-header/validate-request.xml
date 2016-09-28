@@ -1,6 +1,6 @@
 <policy xmlns="http://www.mulesoft.org/schema/mule/policy"
         id="{{policyId}}"
-        policyName="Regex Filter"
+        policyName="Validate Header Param"
         xmlns:mule="http://www.mulesoft.org/schema/mule/core"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:api-platform-gw="http://www.mulesoft.org/schema/mule/api-platform-gw"
