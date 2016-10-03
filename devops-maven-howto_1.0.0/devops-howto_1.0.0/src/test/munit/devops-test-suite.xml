@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:soap-on-db.xml"/>
+    </spring:beans>
+    <munit:test name="devops-test-suite-soap-on-db-FlowTest" description="Test">
+        <munit:set payload="&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:sch=&quot;http://www.mulesoft.com/schemas/Mule/Schema.xsd&quot;&gt;&lt;soapenv:Header/&gt;&lt;soapenv:Body&gt;&lt;sch:getLoanRequest xmlns:sch=&quot;http://www.mulesoft.com/schemas/Mule/Schema.xsd&quot;&gt;&lt;sch:loanId&gt;102&lt;/sch:loanId&gt;&lt;/sch:getLoanRequest&gt;&lt;/soapenv:Body&gt;&lt;/soapenv:Envelope&gt;" doc:name="Set Message"/>
+        <flow-ref name="soap-on-db-Flow" doc:name="Flow-ref to soap-on-db-Flow"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <set-property propertyName="actualResponse" value="#[payload]" doc:name="Store Actual Response"/>
+        <dw:transform-message doc:name="Expected Response">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+'<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns0:getLoanResponse xmlns:ns0="http://www.mulesoft.com/schemas/Mule/Schema.xsd">
+  <ns0:loanList>
+    <ns0:loan>
+      <ns0:loanId>102</ns0:loanId>
+      <ns0:customerId>2</ns0:customerId>
+      <ns0:loanType>auto</ns0:loanType>
+      <ns0:loanAmount>33436.49</ns0:loanAmount>
+      <ns0:monthlyPayment>676.48</ns0:monthlyPayment>
+      <ns0:interestRate>12.56</ns0:interestRate>
+    </ns0:loan>
+  </ns0:loanList>
+</ns0:getLoanResponse></soap:Body></soap:Envelope>']]></dw:set-payload>
+        </dw:transform-message>
+        <set-property propertyName="expectedResponse" value="#[payload]" doc:name="Store Expected Response"/>
+        <munit:assert-on-equals message="Oops! Not the expected response!!" expectedValue="#[message.outboundProperties.expectedResponse]" actualValue="#[message.outboundProperties.actualResponse]" doc:name="Assert Equals"/>
+    </munit:test>
+</mule>

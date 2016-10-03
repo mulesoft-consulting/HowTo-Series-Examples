@@ -1,0 +1,12 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ns0:getLoanResponse xmlns:ns0="http://www.mulesoft.com/schemas/Mule/Schema.xsd">
+   <ns0:loanList>
+     <ns0:loan>
+       <ns0:loanId>102</ns0:loanId>
+       <ns0:customerId>2</ns0:customerId>
+       <ns0:loanType>auto</ns0:loanType>
+       <ns0:loanAmount>33436.49</ns0:loanAmount>
+       <ns0:monthlyPayment>676.48</ns0:monthlyPayment>
+       <ns0:interestRate>12.56</ns0:interestRate>
+     </ns0:loan>
+   </ns0:loanList>
+ </ns0:getLoanResponse></soap:Body></soap:Envelope>
