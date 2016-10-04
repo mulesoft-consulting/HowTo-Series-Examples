@@ -1,0 +1,5 @@
+SUCCESS - Test devops-test-suite-soap-on-db-FlowTest finished Successfully.
+
+===================================================================================
+Number of tests run: 1 - Failed: 0 - Errors: 0 - Skipped: 0 - Time elapsed: 1.975ms
+===================================================================================
