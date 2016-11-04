@@ -1,0 +1,23 @@
+id: validateHeader
+name: Validate Header
+description: Validates a header parameter for a specific value
+category: Security
+type: custom
+standalone: true
+gatewayCompatibility: '>=2.2.0'
+requiresConnectivity: false
+providedCharacteristics: []
+requiredCharacteristics: []
+configuration:
+  - propertyName: headerParam
+    name: Request Header Parameter
+    description: Name of the header parameter to validate.
+    type: string
+    optional: false
+    allowMultiple: false
+  - propertyName: regexFilter
+    name: Regex Filter
+    description: A regular expression to filter a header parameter. Rejects unmatched requests.
+    type: string
+    optional: false
+    allowMultiple: false
