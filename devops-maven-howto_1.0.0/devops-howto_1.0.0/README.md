@@ -1,9 +1,7 @@
-#Build SOAP web service over a mysql DB lookup
+#Using Maven to automate build of existing Studio projects
 #
-This example illustrates how to define a SOAP based webservice on top of
-a database lookup operation. 
-It is complementary to a developer blog
-series that gives step by step instructions to build out this example.
+This example illustrates how to use Maven to automate build of existing Studio projects
+It is complementary to a developer [blog](http://blogs.mulesoft.com/dev/howto/maven/)series that gives step by step instructions to build out this example.
 
 
 
