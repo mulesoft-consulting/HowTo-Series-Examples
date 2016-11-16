@@ -29,7 +29,7 @@ After reading the corresponding blog, creating and running the example in Mule, 
 
 ## Example Use Case
 
-Maven is implemented on top of an existing [SOAP project] (https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service) to enable build automation.
+Maven is implemented on top of an existing [MUnit project] (https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service) to enable build automation.
 
 ## Set Up and Run the Example
 
@@ -37,7 +37,8 @@ As with other examples, you can create template applications straight out of the
 1.	Make sure you have all the pre-requisites for the [original SOAP project] (https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service) set up & configured
 2.	Install MUnit in the Anypoint Studio as instructed in the MUnit 
 [blog](http://blogs.mulesoft.com/dev/howto/munit/)
-2.	Install Maven  in the Anypoint Studio as instructed in the Maven 
+3.	Install Maven  in the Anypoint Studio as instructed in the Maven 
 [blog](http://blogs.mulesoft.com/dev/howto/maven/)
+4. Import the project in Anypoint Studio and run the example
 
 
