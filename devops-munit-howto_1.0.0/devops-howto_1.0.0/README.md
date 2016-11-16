@@ -36,5 +36,4 @@ As with other examples, you can create template applications straight out of the
 2.	Install MUnit in the Anypoint Studio as instructed in the [blog](http://blogs.mulesoft.com/dev/leveraging-munit-for-build-automation/)
 
 
-* View this
 
