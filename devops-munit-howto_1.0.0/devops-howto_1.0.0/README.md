@@ -21,7 +21,7 @@ Database+Connector).
 
 ## Description
 
-This example application is complementary to [How To Devops - Part 1](http://blogs.mulesoft.com/dev/leveraging-munit-for-build-automation/) of the developer blog, "Leveraging MUnit for Build Automation". It illustrates how to test an existing Mule implementation without having to write any java or JUnit code using MUnit.  
+This example application is complementary to [How To Devops - Part 1](http://blogs.mulesoft.com/dev/howto/munit/) of the developer blog, "Leveraging MUnit for Build Automation". It illustrates how to test an existing Mule implementation without having to write any java or JUnit code using MUnit.  
 
 After reading the corresponding blog, creating and running the example in Mule, you should be able to leverage what you have learned to use MUnit for unit and integration testing. 
 
@@ -33,7 +33,7 @@ MUnit is implemented on top of an existing [SOAP project] (https://www.mulesoft.
 
 As with other examples, you can create template applications straight out of the box in Anypoint Studio. You can tweak the configurations of these use case-based examples to create your own customized applications in Mule.
 1.	Make sure you have all the pre-requisites for the [original SOAP project] (https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service) set up & configured
-2.	Install MUnit in the Anypoint Studio as instructed in the [blog](http://blogs.mulesoft.com/dev/leveraging-munit-for-build-automation/)
+2.	Install MUnit in the Anypoint Studio as instructed in the MUnit [blog](http://blogs.mulesoft.com/dev/howto/munit/)
 
 
 
