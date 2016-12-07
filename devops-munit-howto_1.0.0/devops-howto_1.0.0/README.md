@@ -13,14 +13,14 @@ The request to the application is now mocked using MUnit and response validated 
 ## Set Up and Run the Example
 
 As with other examples, you can create template applications straight out of the box in Anypoint Studio. You can tweak the configurations of these use case-based examples to create your own customized applications in Mule.
+
 1. Make sure you have all the pre-requisites for the [original SOAP project](https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service) set up & configured. This includes downloading the MySQL driver, configuring the database credentials in Mule and setting up mock data in the database. Specifics can be found [here]( https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service)
     * [Download and setup the MySQL driver](http://dev.mysql.com/doc/refman/5.7/en/installing.html) in it's default location. You can check out some of the YouTube videos for assistance with this step.
     * Start the MySQL server from System Preferences
     * Open the Example project in Anypoint Studio from Anypoint Exchange.
     * Open src/main/resources/loan.sql and run it in your mysql instance. This script will create a table name "loan" and load it with mock data.
     * Open soap-on-db.xml file located in src/main/app directory. Set url attribute of the db:mysql-config element to:
-    `<db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="<username>" password="<password>"        database="bank" doc:name="MySQL Configuration"/>`
-Configure the username and password as per the database being used.
+    `<db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="<username>" password="<password>"        database="bank" doc:name="MySQL Configuration"/>` Configure the username and password as per the database being used.
    * Run the example application in Anypoint Studio or Standalone
    * Open up SOAP UI. Create a new project and point it to the wsdl url
 (http://localhost:8081/bank/loan?wsdl). In the request message populate the loanId or customerId for the lookup and press send.
