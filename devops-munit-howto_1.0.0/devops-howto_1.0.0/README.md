@@ -27,6 +27,3 @@ Configure the username and password as per the database being used.
 
 2.	Install MUnit in the Anypoint Studio as instructed in the MUnit [blog](http://blogs.mulesoft.com/dev/howto/howto-devops-munit)
 3.	Import the project in Anypoint Studio and run the example as a MUnit application
-
-## Documentation
-[Read full documentation in GitHub]( https://github.com/mulesoft/HowTo-Series-Examples/tree/master/devops-munit-howto_1.0.0/devops-howto_1.0.0/README.md)
