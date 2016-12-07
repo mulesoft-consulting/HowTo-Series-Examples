@@ -9,21 +9,18 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
 http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
-http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
   <mulexml:namespace-manager includeConfigNamespaces="true">
     <mulexml:namespace prefix="sch" uri="http://www.mulesoft.com/schemas/Mule/Schema.xsd"/>
   </mulexml:namespace-manager>
     <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8082" basePath="bank" doc:name="HTTP Listener Configuration"/>
-    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="root" database="bank" doc:name="MySQL Configuration"/>
     <flow name="soap-on-db-Flow">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/loan" doc:name="ReceiveHttpRequest"/>
         <cxf:proxy-service doc:name="Process SOAP request" namespace="http://www.example.org/loan_system_api_wsdl/" payload="body" service="loan_system_api_wsdl" wsdlLocation="loan_system_api_wsdl.wsdl"/>
         <mulexml:dom-to-xml-transformer doc:name="Transform DOM to XML"/>
-        <db:select config-ref="MySQL_Configuration" doc:name="Perform query in DB ">
+        <db:select config-ref="" doc:name="Perform query in DB ">
             <db:parameterized-query><![CDATA[select * from loan where loan_id = #[xpath3("sch:getLoanRequest/sch:loanId")]]]></db:parameterized-query>
         </db:select>
         <dw:transform-message doc:name="Transform Message">
@@ -46,6 +43,6 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 	}
 }]]></dw:set-payload>
         </dw:transform-message>
-        <logger level="INFO" metadata:id="9db6e51d-18b7-47f5-9d37-3086e82ac384" doc:name="Logger"/>
+        <logger level="INFO" metadata:id="9db6e51d-18b7-47f5-9d37-3086e82ac384" doc:name="Logger" message="SOAP Response: #[message.payloadAs(java.lang.String)]"/>
     </flow>
 </mule>
