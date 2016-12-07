@@ -14,7 +14,7 @@ The request to the application is now mocked using MUnit and response validated 
 
 As with other examples, you can create template applications straight out of the box in Anypoint Studio. You can tweak the configurations of these use case-based examples to create your own customized applications in Mule.
 
-1. Make sure you have all the pre-requisites for the [original SOAP project](https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service) set up & configured. This includes downloading the MySQL driver, configuring the database credentials in Mule and setting up mock data in the database. Specifics can be found [here]( https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service)
+1. Make sure you have all the pre-requisites for the [original SOAP project](https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service) set up & configured. This includes downloading the MySQL driver, configuring the database credentials in Mule and setting up mock data in the database. Specifics below or can be found [here as well]( https://www.mulesoft.com/exchange/#!/expose-database-through-soap-web-service)
     * [Download and setup the MySQL driver](http://dev.mysql.com/doc/refman/5.7/en/installing.html) in it's default location. You can check out some of the YouTube videos for assistance with this step.
     * Start the MySQL server from System Preferences
     * Open the Example project in Anypoint Studio from Anypoint Exchange.
