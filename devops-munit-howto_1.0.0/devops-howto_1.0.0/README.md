@@ -19,11 +19,10 @@ As with other examples, you can create template applications straight out of the
     c)Open the Example project in Anypoint Studio from Anypoint Exchange.
     d)Open src/main/resources/loan.sql and run it in your mysql instance. This script will create a table name "loan" and load it with mock data.
     e)Open soap-on-db.xml file located in src/main/app directory. Set url attribute of the db:mysql-config element to:
-    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="<username>" password="<password>"        database="bank" doc:name="MySQL Configuration"/>"
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="<username>" password="<password>"        database="bank" doc:name="MySQL Configuration"/>
 Configure the username and password as per the database being used.
    f)Run the example application in Anypoint Studio or Standalone
    g)Open up SOAP UI. Create a new project and point it to the wsdl url
 (http://localhost:8081/bank/loan?wsdl). In the request message populate the loanId or customerId for the lookup and press send.
-
 2.	Install MUnit in the Anypoint Studio as instructed in the MUnit [blog](http://blogs.mulesoft.com/dev/howto/howto-devops-munit)
 3.	Import the project in Anypoint Studio and run the example as a MUnit application
