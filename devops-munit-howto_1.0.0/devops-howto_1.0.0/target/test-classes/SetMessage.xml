@@ -1,0 +1,1 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="http://www.mulesoft.com/schemas/Mule/Schema.xsd"><soapenv:Header/><soapenv:Body><sch:getLoanRequest xmlns:sch="http://www.mulesoft.com/schemas/Mule/Schema.xsd"><sch:loanId>102</sch:loanId></sch:getLoanRequest></soapenv:Body></soapenv:Envelope>
