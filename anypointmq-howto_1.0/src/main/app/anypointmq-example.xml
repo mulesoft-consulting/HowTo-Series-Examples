@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/anypoint-mq http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <anypoint-mq:config name="Anypoint_MQ_Configuration" doc:name="Anypoint MQ Configuration">
+        <anypoint-mq:provider url="https://mq-us-east-1.anypoint.mulesoft.com/api/v1" clientId="efadd193b3514094a394d74e85093419" clientSecret="16704B0601Da422CaE09EDc29f8fC5ff"/>
+    </anypoint-mq:config>
+    <db:mysql-config name="MySQL_Configuration" host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.schema}" doc:name="MySQL Configuration"/>
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <flow name="anypointmq-consumeFlow">
+        <anypoint-mq:subscriber config-ref="Anypoint_MQ_Configuration" destination="CustomerDB" doc:name="Consume CustomerDB Destinsation: Anypoint MQ" metadata:id="303d5d43-b4c7-44ab-ba1b-7c1cdb3bc7a7"/>
+        <byte-array-to-object-transformer mimeType="application/json" doc:name="Byte Array to Object"/>
+        <dw:transform-message doc:name="POJO : Transform Message" metadata:id="c983dbb8-834b-4e57-abf3-e771309e3c70">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <choice doc:name="Choice">
+            <when expression="#[payload.country == 'Japan']">
+                <scripting:component doc:name="Japan throw SQLException: Groovy">
+                    <scripting:script engine="Groovy"><![CDATA[throw new java.sql.SQLException("We threw this! Cannot get connection for URL ...")
+]]></scripting:script>
+                </scripting:component>
+            </when>
+            <otherwise>
+                <logger message="Not Japan No Exception" level="INFO" doc:name="Not Japan : Logger"/>
+                <db:insert config-ref="MySQL_Configuration" doc:name="INSERT Customer : Database">
+                    <db:parameterized-query><![CDATA[INSERT INTO accounts (accountId, accountName, Country)
+VALUES (#[payload.id], #[payload.name], #[payload.country])]]></db:parameterized-query>
+                </db:insert>
+            </otherwise>
+        </choice>
+        <choice-exception-strategy doc:name="Choice Exception Strategy">
+            <catch-exception-strategy when="#[exception.causeMatches('*.MySQLIntegrityConstraintViolationException')]" doc:name="SQLException: Catch Exception Strategy">
+                <logger message="Constraint Violation : Need to fix data/ or db model" level="INFO" doc:name="Constriant Violation : Logger"/>
+            </catch-exception-strategy>
+            <rollback-exception-strategy maxRedeliveryAttempts="0" when="#[exception.causedBy(java.sql.SQLException)]" doc:name="Rollback Exception Strategy">
+                <logger message="Rollback Retry" level="INFO" doc:name="Rollback Retry Logger"/>
+                <on-redelivery-attempts-exceeded>
+                    <logger message="Exhausted total retries met only when MAX Redelivery of Anypoint Connector Config &gt; -1" level="INFO" doc:name="Exhausted Delivery : Logger"/>
+                </on-redelivery-attempts-exceeded>
+            </rollback-exception-strategy>
+        </choice-exception-strategy>
+    </flow>
+    <flow name="anypointmq-publishFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
+        <dw:transform-message doc:name="create JSON: Transform Message" metadata:id="c9066674-d09d-43cc-836b-176c0be83c8a">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	country: inboundProperties."http.query.params".country,
+	event: "createCustomer",
+	id: inboundProperties."http.query.params".id,
+	name: inboundProperties."http.query.params".name
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <anypoint-mq:publish config-ref="Anypoint_MQ_Configuration" destination="CustomerDB" doc:name="Anypoint MQ"/>
+    </flow>
+</mule>
