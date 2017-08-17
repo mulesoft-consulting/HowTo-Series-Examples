@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {},
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "HL7_EDI__Configuration",
+            "typeId": "InMessage"
+        }
+    },
+    "id": "88a5bd9d-f01f-4c26-918a-b1d8e287f76e",
+    "version": "5.2.0.0"
+}

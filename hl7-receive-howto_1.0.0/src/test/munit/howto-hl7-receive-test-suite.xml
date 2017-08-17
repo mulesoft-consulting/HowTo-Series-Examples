@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:howto-hl7-receive.xml"/>
+    </spring:beans>
+    <munit:test name="howto-hl7-receive-test-suite-howto-hl7-receiveFlowTest" description="Test">
+        <flow-ref name="howto-hl7-receiveFlow" doc:name="Flow-ref to howto-hl7-receiveFlow"/>
+    </munit:test>
+    <munit:test name="howto-hl7-receive-test-suite-format-lookup-hl7-flowTest" description="Test">
+        <flow-ref name="format-lookup-hl7-flow" doc:name="Flow-ref to format-lookup-hl7-flow"/>
+    </munit:test>
+    <munit:test name="howto-hl7-receive-test-suite-patientClass-lookup-flowTest" description="Test">
+        <flow-ref name="patientClass-lookup-flow" doc:name="Flow-ref to patientClass-lookup-flow"/>
+    </munit:test>
+</mule>
