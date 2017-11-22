@@ -1,0 +1,40 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/a26dac18-db4d-41b0-97ce-80702048f849 # 
+version: 1.0.2-DEV
+title: Vault System API
+
+securitySchemes:
+  basic:
+    description: |
+      This API supports Basic Authentication.
+    type: Basic Authentication
+
+/:
+  get:
+    securedBy: basic
+    queryParameters: 
+      app_identity:
+        type: string
+        required: true
+
+    responses:
+      200:
+        body:
+          application/json:
+      404:
+        body:
+          application/json:
+  post:
+    securedBy: basic
+    queryParameters: 
+      app_identity:
+        type: string
+        required: true
+
+    body:
+      application/json:
+        
+    responses:
+      200:
+        body:
+          application/json:

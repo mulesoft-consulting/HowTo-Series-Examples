@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+    <flow name="wf_Get_VaultSecrets">
+        <flow-ref name="hf_rewriteURL" doc:name="hf_rewriteURL"/>
+        <flow-ref name="hf_LogRequest" doc:name="hf_LogRequest"/>
+        <enricher source="#[payload]" target="#[flowVars.vault_token]" doc:name="Message Enricher">
+            <flow-ref name="wf_Login_Vault" doc:name="wf_Login_Vault"/>
+        </enricher>
+        <http:request config-ref="Vault_HTTP_Request_Configuration" path="#[flowVars.vault_url]/#[flowVars.path_request]" method="GET" doc:name="Get Secret from Vault">
+            <http:request-builder>
+                <http:header headerName="X-Vault-Token" value="#[flowVars.vault_token]"/>
+            </http:request-builder>
+        </http:request>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload.data]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="wf_Write_VaultSecrets">
+        <flow-ref name="hf_rewriteURL" doc:name="hf_rewriteURL"/>
+        <flow-ref name="hf_LogRequest" doc:name="hf_LogRequest"/>
+        <enricher source="#[payload]" target="#[flowVars.vault_token]" doc:name="Message Enricher">
+            <flow-ref name="wf_Login_Vault" doc:name="wf_Login_Vault"/>
+        </enricher>
+        <http:request config-ref="Vault_HTTP_Request_Configuration" path="#[flowVars.vault_url]/#[flowVars.path_request]" method="POST" doc:name="Send Secret to Vault">
+            <http:request-builder>
+                <http:header headerName="X-Vault-Token" value="#[flowVars.vault_token]"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+    <flow name="wf_Login_Vault">
+        <dw:transform-message doc:name="Craft Login Payload">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	role_id: p('VAULT.APP_ROLE'),
+	secret_id: p('VAULT.APP_SECRET')
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <http:request config-ref="Vault_HTTP_Request_Configuration" path="${VAULT.AUTH_URL}" method="POST" doc:name="Login Vault w AppRole"/>
+        <dw:transform-message doc:name="Extract Vault Token">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload.auth.client_token default ""]]></dw:set-payload>
+        </dw:transform-message>
+        <validation:is-true expression="#[payload != &quot;&quot;]" doc:name="Validation"/>
+    </flow>
+</mule>
