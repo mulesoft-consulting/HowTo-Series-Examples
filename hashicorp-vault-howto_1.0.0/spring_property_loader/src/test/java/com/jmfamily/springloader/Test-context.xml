@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <beans>
+        <bean id="propertyConfigurer" name="propertyConfigurer" class="com.jmfamily.springloader.JMFPropertyPlaceholderConfigurer">
+            <constructor-arg name="vaultPath" value="secret/test/a"/>
+            <constructor-arg name="vaultToken" value="fd9ca87d-3ecb-f7a1-194a-bab5c6834d2b"/>
+        </bean>
+    </beans>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <flow name="hf_rewriteURL">
+        <dw:transform-message doc:name="Lowercase URL">
+            <dw:set-variable variableName="vault_url"><![CDATA[%dw 1.0
+%output application/java
+---
+lower p('VAULT.BACKEND_URL')]]></dw:set-variable>
+        </dw:transform-message>
+    </flow>
+    <flow name="hf_LogRequest">
+        <set-variable variableName="path_request" value="#[message.inboundProperties.'http.query.params'.app_identity]" doc:name="Save Path Requested"/>
+        <tracking:custom-event event-name="logging_Request" doc:name="Custom Business Event">
+            <tracking:meta-data key="requested_at" value="#[server.dateTime]"/>
+            <tracking:meta-data key="client_id" value="#[flowVars.client_id]"/>
+            <tracking:meta-data key="app_identity" value="#[flowVars.path_request]"/>
+        </tracking:custom-event>
+        <validation:is-not-empty exceptionClass="org.mule.module.apikit.exception.BadRequestException" value="#[flowVars.path_request]" doc:name="Validation"/>
+    </flow>
+</mule>

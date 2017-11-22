@@ -1,0 +1,31 @@
+#%RAML 1.0
+version: 1.0.0-TEST
+baseUri: https://mocksvc.mulesoft.com/mocks/30e9cc98-98b3-49f9-a64b-69d1e597ab1e # 
+title: Configuration Manager Process API
+
+securitySchemes:
+  basic:
+    description: |
+      This API supports Basic Authentication.
+    type: Basic Authentication
+
+/:
+  get:
+    securedBy: basic
+    responses:
+      200:
+        body:
+          application/json:
+      404:
+        body:
+          application/json:
+
+  post:
+    securedBy: basic
+    body:
+      application/json:
+        
+    responses:
+      200:
+        body:
+          application/json:
